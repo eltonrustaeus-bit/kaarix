@@ -73,8 +73,14 @@ header.site {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(15, 33, 56, 0.92);
+  background: rgba(15, 33, 56, 0.7);
   backdrop-filter: blur(6px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+header.site.scrolled {
+  background: rgba(15, 33, 56, 0.94);
   border-bottom: 1px solid var(--line);
 }
 
@@ -84,6 +90,11 @@ header.site .bar {
   justify-content: space-between;
   padding: 14px 20px;
   gap: 16px;
+  transition: padding 0.25s ease;
+}
+
+header.site.scrolled .bar {
+  padding: 10px 20px;
 }
 
 header.site .logo img {
@@ -160,19 +171,27 @@ nav.main a:hover {
   border-bottom: 1px solid var(--line);
 }
 
-.hero-bg {
+.hero-bg-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-bg-img {
+  position: absolute;
+  inset: -60px 0;
+}
+
+.hero-overlay {
   position: absolute;
   inset: 0;
   background-image: linear-gradient(
-      180deg,
-      rgba(10, 22, 38, 0.88) 0%,
-      rgba(10, 22, 38, 0.72) 45%,
-      rgba(15, 33, 56, 0.96) 100%
-    ),
-    url("/images/hero-warehouse.jpg");
-  background-size: cover;
-  background-position: center 65%;
-  z-index: 0;
+    180deg,
+    rgba(10, 22, 38, 0.88) 0%,
+    rgba(10, 22, 38, 0.72) 45%,
+    rgba(15, 33, 56, 0.97) 100%
+  );
 }
 
 .hero-content {
@@ -330,23 +349,24 @@ section.products .head p {
 }
 
 .card .imgwrap {
+  position: relative;
   background: #ffffff;
   aspect-ratio: 4 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
   overflow: hidden;
 }
 
+.card .imgwrap-inner {
+  position: absolute;
+  inset: 0;
+  padding: 22px;
+}
+
 .card .imgwrap img {
-  max-height: 100%;
-  object-fit: contain;
   transition: transform 0.35s ease;
 }
 
 .card:hover .imgwrap img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .card .body {
@@ -428,6 +448,156 @@ section.products .head p {
 
 .cta-pair .order {
   flex: 1;
+  text-align: center;
+}
+
+/* Featured product spotlight */
+.featured {
+  padding: 90px 0;
+  position: relative;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featured-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.featured-image img {
+  padding: 32px;
+}
+
+.featured h2 {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.featured-copy {
+  color: #aab5c4;
+  font-size: 15.5px;
+  line-height: 1.65;
+  margin: 0 0 22px;
+  max-width: 460px;
+}
+
+.featured-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+}
+
+.featured-points li {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e3e8ee;
+  padding-left: 18px;
+  position: relative;
+}
+
+.featured-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 2px;
+}
+
+/* Contact */
+.contact {
+  padding: 84px 0;
+  border-top: 1px solid var(--line);
+}
+
+.contact-card {
+  background: var(--navy-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 44px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (max-width: 750px) {
+  .contact-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+  }
+}
+
+.contact-info h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 4px 0 14px;
+}
+
+.contact-info p {
+  color: #aab5c4;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.contact-person {
+  background: var(--navy-3);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.contact-role {
+  color: #8a97a8;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.contact-link {
+  color: #cfd7e2;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.contact-link:hover {
+  color: #fff;
+}
+
+.contact-person .btn {
+  margin-top: 14px;
   text-align: center;
 }
 

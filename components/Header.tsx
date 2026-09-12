@@ -1,8 +1,20 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="site">
+    <header className={`site${scrolled ? " scrolled" : ""}`}>
       <div className="bar wrap">
         <a className="logo" href="#top">
           <Image
@@ -10,7 +22,7 @@ export default function Header() {
             alt="Kaarix"
             width={240}
             height={91}
-            style={{ height: 34, width: "auto" }}
+            style={{ height: 30, width: "auto" }}
             priority
           />
         </a>

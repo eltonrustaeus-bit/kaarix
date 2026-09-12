@@ -13,8 +13,7 @@ export default function ProductCard({ product }: { product: Product }) {
   // Tracklighten byter produktbild beroende på vald kulör (svart/vit).
   let image = product.image;
   if (product.slug === "tracklight-cob-led") {
-    if (variant.label.includes("VIT")) image = tracklightImageByFinish.VIT;
-    else image = tracklightImageByFinish.SVART;
+    image = variant.label.includes("VIT") ? tracklightImageByFinish.VIT : tracklightImageByFinish.SVART;
   }
 
   return (
@@ -24,24 +23,17 @@ export default function ProductCard({ product }: { product: Product }) {
         hidden: { opacity: 0, y: 24 },
         show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
       }}
-      layout
     >
       <div className="imgwrap">
-        <motion.div
-          key={image}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.25 }}
-          style={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
+        <div className="imgwrap-inner">
           <Image
             src={image}
             alt={product.name}
-            width={300}
-            height={270}
-            style={{ height: "100%", width: "auto" }}
+            fill
+            sizes="(max-width: 600px) 90vw, (max-width: 900px) 45vw, 30vw"
+            style={{ objectFit: "contain" }}
           />
-        </motion.div>
+        </div>
       </div>
       <div className="body">
         <div className="cat">{product.category}</div>

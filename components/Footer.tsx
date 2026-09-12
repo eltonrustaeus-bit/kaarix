@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="site" id="kontakt">
+    <footer className="site">
       <div className="wrap">
         <a className="logo" href="#top">
           <Image

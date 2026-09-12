@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import Featured from "@/components/Featured";
 import ProductGrid from "@/components/ProductGrid";
+import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import PageLoader from "@/components/PageLoader";
@@ -22,6 +24,8 @@ export default function Home() {
           <span>Beställning hanteras via KSB Teknik</span>
         </div>
       </div>
+
+      <Featured />
 
       <section className="products" id="produkter">
         <div className="wrap">
@@ -71,6 +75,7 @@ export default function Home() {
         </Reveal>
       </section>
 
+      <Contact />
       <Footer />
     </>
   );

@@ -1,6 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const container = {
   hidden: {},
@@ -15,9 +17,27 @@ const item = {
 };
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  // Subtil parallax: bakgrunden rör sig långsammare än scrollen, max 60px.
+  const y = useTransform(scrollYProgress, [0, 1], [0, 60]);
+
   return (
-    <section className="hero" id="top">
-      <div className="hero-bg" />
+    <section className="hero" id="top" ref={ref}>
+      <div className="hero-bg-wrap">
+        <motion.div className="hero-bg-img" style={{ y }}>
+          <Image
+            src="/images/hero-warehouse.jpg"
+            alt="Industrilokal belyst med LED-armaturer"
+            fill
+            priority
+            quality={68}
+            sizes="100vw"
+            style={{ objectFit: "cover", objectPosition: "center 65%" }}
+          />
+        </motion.div>
+        <div className="hero-overlay" />
+      </div>
       <motion.div
         className="wrap hero-content"
         variants={container}
