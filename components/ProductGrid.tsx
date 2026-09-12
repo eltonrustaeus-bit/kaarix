@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { categories, products } from "@/lib/products";
 import ProductCard from "./ProductCard";
 
@@ -30,20 +30,28 @@ export default function ProductGrid() {
         ))}
       </div>
 
+      {/*
+        Den yttre wrappern sköter bara EN engångsanimation: att hela rutnätet
+        tonas in när man scrollar ner till det första gången. Varje kort
+        äger sedan sin egen mount/unmount-animation (se ProductCard), så att
+        ett kort som filtreras bort och sedan tillbaka alltid tonas in på
+        nytt — istället för att förlita sig på förälderns engångstrigger,
+        vilket tidigare gjorde att produkter kunde "försvinna" permanent
+        efter ett filterbyte tills sidan laddades om.
+      */}
       <motion.div
         className="grid"
         layout
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={{
-          hidden: {},
-          show: { transition: { staggerChildren: 0.08 } },
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        {filtered.map((p) => (
-          <ProductCard product={p} key={p.slug} />
-        ))}
+        <AnimatePresence mode="popLayout" initial={false}>
+          {filtered.map((p) => (
+            <ProductCard product={p} key={p.slug} />
+          ))}
+        </AnimatePresence>
       </motion.div>
     </>
   );

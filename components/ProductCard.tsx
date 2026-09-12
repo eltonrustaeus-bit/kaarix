@@ -19,10 +19,11 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <motion.div
       className="card"
-      variants={{
-        hidden: { opacity: 0, y: 24 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-      }}
+      layout
+      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.22, ease: "easeIn" } }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="imgwrap">
         <div className="imgwrap-inner">

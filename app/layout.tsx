@@ -4,9 +4,11 @@ import "./globals.css";
 
 // Självhostade variabla typsnittsfiler (hämtade från Google Fonts, ligger i public/fonts).
 // Självhostning = ingen extern request till Google vid sidladdning, snabbare och mer robust.
-const archivo = localFont({
-  src: "../public/fonts/Archivo-Variable.woff2",
-  weight: "700 900",
+// Space Grotesk ersätter Archivo som rubriktypsnitt: mer distinkt/tekniskt uttryck (geometriska
+// former med ett litet twist i "a"/"t"/"g") som passar ett industriellt LED-varumärke bättre.
+const displayFont = localFont({
+  src: "../public/fonts/SpaceGrotesk-Variable.woff2",
+  weight: "500 700",
   variable: "--font-display",
   display: "swap",
 });
@@ -30,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sv" className={`${archivo.variable} ${plexSans.variable}`}>
+    <html lang="sv" className={`${displayFont.variable} ${plexSans.variable}`}>
       <body>{children}</body>
     </html>
   );
