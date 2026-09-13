@@ -322,7 +322,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-block: clamp(4rem, 2rem + 9vw, 7.5rem) clamp(3.5rem, 2rem + 7vw, 6.5rem);
+  padding-block: clamp(2.75rem, 1.5rem + 5vw, 4.5rem) clamp(2.5rem, 1.5rem + 4vw, 4rem);
   border-bottom: 1px solid var(--border);
 }
 
@@ -359,76 +359,23 @@
 }
 
 .hero-content {
-  max-width: 40rem;
-}
-
-/* Produktbilden i heron visas bara på desktop. På mindre skärmar bär fotot
-   och texten heron ensamma — där finns ingen yta över att fylla. */
-.hero-product {
-  display: none;
-}
-
-@media (min-width: 1120px) {
-  .hero-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-    grid-template-areas:
-      "content product"
-      "facts   product";
-    align-items: center;
-    column-gap: clamp(var(--space-8), 5vw, var(--space-11));
-  }
-
-  .hero-content {
-    grid-area: content;
-  }
-
-  .hero-facts {
-    grid-area: facts;
-    align-self: end;
-  }
-
-  .hero-product {
-    grid-area: product;
-    display: block;
-    position: relative;
-    aspect-ratio: 4 / 3;
-    align-self: center;
-  }
-
-  /* Mjuk ljusbloom bakom armaturen — den lyser, det är hela poängen med
-     produkten. Ligger bakom bilden och är medvetet svag. */
-  .hero-product::before {
-    content: "";
-    position: absolute;
-    inset: 8% -6%;
-    background: radial-gradient(
-      ellipse at 50% 45%,
-      rgba(255, 236, 210, 0.16),
-      rgba(255, 236, 210, 0.05) 42%,
-      transparent 70%
-    );
-    filter: blur(6px);
-  }
-
-  .hero-product img {
-    position: relative;
-    filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55));
-  }
+  max-width: 42rem;
 }
 
 .hero h1 {
   font-size: var(--text-display);
-  margin-block: var(--space-5) var(--space-5);
+  margin-block: var(--space-4) var(--space-5);
 }
 
+/* Den röda delen av rubriken. font-style måste nollställas explicit —
+   <em> är kursivt som standard, och kursiv Space Grotesk finns inte. */
 .hero h1 em {
   font-style: normal;
   color: var(--brand-text);
 }
 
 .hero-lead {
-  max-width: 34rem;
+  max-width: 36rem;
   color: #ccd7e3;
 }
 
@@ -436,21 +383,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-top: var(--space-7);
+  margin-top: var(--space-6);
 }
 
-/* Nyckeltal längst ner i heron — konkreta, verifierbara siffror.
-   Ligger på en egen rad avdelad med en hårfin linje istället för att sväva
-   fritt bredvid texten; annars saknar de visuellt fäste på breda skärmar. */
+/* Nyckeltalen ligger på en egen rad avdelad med en hårfin linje. */
 .hero-facts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, auto));
   justify-content: start;
-  gap: clamp(var(--space-6), 6vw, var(--space-11));
-  margin-top: clamp(var(--space-8), 6vw, var(--space-11));
-  padding-top: var(--space-6);
+  gap: clamp(var(--space-5), 4vw, var(--space-9));
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
   border-top: 1px solid var(--border);
-  max-width: 44rem;
+  max-width: 48rem;
   width: 100%;
 }
 
@@ -465,17 +410,19 @@
 .hero-fact dd {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.375rem);
   font-weight: 700;
   letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
 }
 
-@media (max-width: 560px) {
-  /* 3 kolumner blir trångt och 2 kolumner lämnar ett ensamt värde på rad två.
-     Som etikett/värde-rader läser det i stället som en liten specifikation. */
+@media (max-width: 620px) {
+  /* Som etikett/värde-rader — 3 kolumner blir trångt och 2 lämnar ett
+     ensamt värde på rad två. */
   .hero-facts {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
+    margin-top: var(--space-6);
   }
 
   .hero-fact {
@@ -495,12 +442,19 @@
     margin-bottom: 0;
   }
 
-  .hero-fact dd {
-    font-size: 1.125rem;
-  }
-
   .hero-actions .btn {
     width: 100%;
+  }
+}
+
+@media (min-height: 900px) and (min-width: 1024px) {
+  .hero {
+    padding-block: clamp(4rem, 2rem + 5vw, 6rem) clamp(3.5rem, 2rem + 4vw, 5rem);
+  }
+
+  .hero-facts {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
   }
 }
 
@@ -974,6 +928,50 @@
   .buy-actions {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* En tabell får aldrig tvinga fram horisontell scroll på HELA sidan —
+   den scrollar i sin egen behållare i stället. */
+.table-scroll {
+  overflow-x: auto;
+  margin-inline: calc(var(--space-1) * -1);
+  padding-inline: var(--space-1);
+}
+
+.compare-table {
+  /* Får växa bredare än spalten och scrolla i .table-scroll i stället för
+     att pressa ihop kolumnerna så att värdena går ihop. */
+  width: auto;
+  min-width: 100%;
+}
+
+.spec-table.compare-table th,
+.spec-table.compare-table td {
+  padding-right: var(--space-6);
+}
+
+.spec-table.compare-table th:last-child,
+.spec-table.compare-table td:last-child {
+  padding-right: 0;
+}
+
+.spec-table.compare-table th[scope="col"] {
+  color: var(--text);
+  font-weight: 600;
+  width: auto;
+  white-space: nowrap;
+  padding-right: var(--space-5);
+  border-bottom-color: var(--border-strong);
+}
+
+.spec-table.compare-table th[scope="row"] {
+  width: 34%;
+  min-width: 8rem;
+}
+
+.spec-table.compare-table td {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Specifikationstabell */

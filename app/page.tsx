@@ -10,14 +10,21 @@ import Reveal from "@/components/ui/Reveal";
 import { ArrowRight, Info } from "@/components/ui/Icon";
 import { getProduct, products } from "@/lib/products";
 
+/*
+ * Varje påstående här ska gå att belägga mot KSB:s produktblad.
+ * IP65 och teknisk livslängd är kontrollerade för samtliga tre
+ * produktfamiljer. Skriv inte "varje produkt har X" utan att ha läst X i
+ * alla tre bladen — det var så en tidigare version kom att lova
+ * spridningsvinkel och certifieringar även för Flood, där de inte anges.
+ */
 const reasons = [
   {
     title: "Byggt för drift dygnet runt",
-    body: "Armaturerna är konstruerade för kontinuerlig drift i verkstad, lager och produktion — IP65, slagtålighet och 50 000 timmars teknisk livslängd.",
+    body: "Hela sortimentet är IP65-klassat och konstruerat för kontinuerlig drift i verkstad, lager och produktion, med en teknisk livslängd på minst 50 000 timmar.",
   },
   {
     title: "Dokumenterad prestanda",
-    body: "Varje produkt har ett komplett produktblad med ljusflöde, färgtemperatur, spridningsvinkel och certifieringar. Inga ungefärliga siffror.",
+    body: "Varje artikel har ett produktblad med effekt, ljusflöde, färgtemperatur, färgåtergivning och kapslingsklass. Siffrorna på den här sidan är hämtade därifrån.",
   },
   {
     title: "Samma leverans som KSB",

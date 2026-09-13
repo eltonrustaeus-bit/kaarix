@@ -20,7 +20,7 @@ const principles = [
   },
   {
     title: "Specifikationer som håller",
-    body: "Varje produkt levereras med produktblad: ljusflöde, färgtemperatur, CRI, spridningsvinkel, kapslingsklass och certifieringar. Det som står i bladet är det du får.",
+    body: "Varje artikel levereras med ett produktblad: effekt, ljusflöde, färgtemperatur, färgåtergivning och kapslingsklass. Det som står i bladet är det som står på den här sidan.",
   },
   {
     title: "Byggt på KSB:s logistik",
@@ -81,8 +81,8 @@ export default function AboutPage() {
               </p>
               <p>
                 Kaarix samlar belysningen under ett namn med gemensamma krav: dokumenterad
-                prestanda, robust konstruktion och fem års garanti. Först ut är
-                industriarmaturer, strålkastare och skenbelysning.
+                prestanda i produktblad, robust konstruktion och IP65 rakt igenom sortimentet.
+                Först ut är industriarmaturer, strålkastare och skenbelysning.
               </p>
             </div>
             <div style={{ marginTop: "var(--space-7)" }}>

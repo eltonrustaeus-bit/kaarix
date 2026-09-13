@@ -7,11 +7,22 @@ import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { ArrowRight } from "@/components/ui/Icon";
 
-/** Verifierade siffror från KSB:s egna produktblad — inga påhittade nyckeltal. */
+/*
+ * Nyckeltalen måste gälla HELA sortimentet, annars är de vilseledande.
+ * Kontrollerat mot KSB:s tre produktblad:
+ *   Ljusutbyte  AUSTIN 180, Flood 150, Tracklight 90 lm/W  → "upp till 180"
+ *   IP65        samtliga tre                               → gäller rakt av
+ *   Livslängd   AUSTIN 50 000, Tracklight 50 000, Flood 100 000 h → "från 50 000"
+ *
+ * Garanti stod här tidigare som "5 år". Den är dokumenterad för AUSTIN och
+ * Tracklight men anges INTE i Flood-produktbladen, så den dög inte som
+ * löfte för hela sortimentet. Garantin står kvar på de produktsidor där den
+ * faktiskt är belagd.
+ */
 const facts = [
-  { label: "Ljusutbyte", value: "160 lm/W" },
+  { label: "Ljusutbyte", value: "Upp till 180 lm/W" },
   { label: "Kapslingsklass", value: "IP65" },
-  { label: "Garanti", value: "5 år" },
+  { label: "Teknisk livslängd", value: "Från 50 000 h" },
 ];
 
 export default function Hero() {
@@ -20,12 +31,6 @@ export default function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 70]);
 
-  /*
-   * Vid reducerad rörelse sätts initial={false} — elementet renderas direkt
-   * i sitt slutläge. Returnera ALDRIG ett tomt propsobjekt i stället: då
-   * ligger den inline-satta opacity: 0 från första renderingen kvar och
-   * innehållet blir permanent osynligt efter hydrering.
-   */
   const fade = (delay: number) => ({
     initial: reduceMotion ? (false as const) : { opacity: 0, y: 14 },
     animate: { opacity: 1, y: 0 },
@@ -63,8 +68,8 @@ export default function Hero() {
 
           <motion.p className="lead hero-lead" {...fade(0.16)}>
             Kaarix utvecklar LED-armaturer, strålkastare och skenbelysning för verkstad, lager och
-            industri — byggda för kontinuerlig drift, med dokumenterad prestanda och fem års
-            garanti.
+            industri — byggda för kontinuerlig drift, med fullständiga produktblad för varje
+            artikel.
           </motion.p>
 
           <motion.div className="hero-actions" {...fade(0.24)}>
@@ -86,29 +91,6 @@ export default function Hero() {
             </div>
           ))}
         </motion.dl>
-
-        {/* Dekorativ — produkten presenteras med namn längre ner på sidan.
-            Visas bara från 1120px och uppåt, se .hero-product i CSS. */}
-        <motion.div
-          className="hero-product"
-          aria-hidden="true"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
-          }
-        >
-          <Image
-            src="/images/austin-cutout.png"
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 1119px) 10px, 44vw"
-            style={{ objectFit: "contain" }}
-          />
-        </motion.div>
       </div>
     </section>
   );

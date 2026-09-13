@@ -6,7 +6,7 @@ import ProductCard from "@/components/product/ProductCard";
 import CtaBand from "@/components/sections/CtaBand";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Reveal from "@/components/ui/Reveal";
-import { getProduct, products, relatedProducts } from "@/lib/products";
+import { getProduct, products, relatedProducts, variantComparison } from "@/lib/products";
 
 type Params = { params: { slug: string } };
 
@@ -35,6 +35,7 @@ export default function ProductPage({ params }: Params) {
   if (!product) notFound();
 
   const related = relatedProducts(product.slug);
+  const comparison = variantComparison(product);
 
   return (
     <>
@@ -82,8 +83,43 @@ export default function ProductPage({ params }: Params) {
             </div>
           </section>
 
+          {comparison && (
+            <section className="product-block">
+              <h2>Jämför utföranden</h2>
+              <div className="table-scroll">
+                <table className="spec-table compare-table">
+                  <caption className="visually-hidden">
+                    Jämförelse av utföranden för {product.name}
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <span className="visually-hidden">Egenskap</span>
+                      </th>
+                      {comparison.columns.map((c) => (
+                        <th scope="col" key={c.label}>
+                          {c.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comparison.rows.map((row, i) => (
+                      <tr key={row}>
+                        <th scope="row">{row}</th>
+                        {comparison.columns.map((c) => (
+                          <td key={c.label}>{c.specs[i]?.value}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
           <section className="product-block">
-            <h2>Tekniska data</h2>
+            <h2>{comparison ? "Gemensamma data" : "Tekniska data"}</h2>
             <table className="spec-table">
               <caption className="visually-hidden">Tekniska data för {product.name}</caption>
               <tbody>
