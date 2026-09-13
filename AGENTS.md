@@ -105,15 +105,27 @@ värsta felläget en scroll-animation kan ha.
 automatisk synk. Beskrivningar och tekniska data är hämtade ordagrant från KSB:s egna
 produktsidor. **Hitta aldrig på specifikationer.**
 
+**Produktbladen (PDF) är den mest formella källan** och går före den tekniska tabellen på
+produktsidan när de säger emot varandra — det gör de faktiskt: sidan anger 6400 lm och
+160 lm/W för AUSTIN medan bladet anger 7200 lm och 180 lm/W (bladet stämmer med
+produktnamnet). Bladen når man från respektive produktsida.
+
 Att känna till:
 - Produkt-URL:erna hos Starweb är missvisande. AUSTIN ligger på en slug som innehåller
   "tracklight" eftersom KSB skapade produkten genom att duplicera en tracklight. URL:en är
   ändå rätt — verifiera mot söksidan innan du "rättar" något.
 - "BOSTON WORK LIGHT" är felaktigt taggad med Tillverkare=Kaarix i Starweb men är inte en
   Kaarix-produkt. Exkluderad med flit.
-- **Öppen fråga:** KSB:s produktnamn anger "7200LM" för AUSTIN medan deras egen tekniska
-  tabell anger 6400 lm. Vi publicerar tabellvärdet och undviker lumen som säljargument i
-  rubriker tills Jesper bekräftat vilket som stämmer.
+- Varianter kan skilja sig på fler sätt än priset. Flood 50/150/300 W har olika ljusflöde,
+  kabellängd (6/8/10 m), mått och vikt — skriv aldrig en variants värde som om det gällde
+  hela familjen. `variantComparison()` bygger jämförelsetabellen och slår ihop varianter med
+  identiska värden.
+- **Skriv aldrig ett värde som gäller EN produkt som om det gällde hela sortimentet.**
+  Ljusutbytet varierar 90–180 lm/W. Garanti är dokumenterad för AUSTIN och Tracklight men
+  saknas i Flood-bladen. IP65 och minst 50 000 timmars livslängd är de enda nyckeltal som
+  är belagda för samtliga tre produktfamiljer.
+- **Öppen fråga till KSB:** gäller fem års garanti även Flood-strålkastarna? Står inte i
+  deras produktblad.
 
 ## Git / deploy — VIKTIGT
 
