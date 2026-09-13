@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Designtokens
+   Enda källan för färg, typografi, avstånd, radier och rörelse.
+   Ändra här — inte ute i komponentreglerna.
+   ========================================================================== */
+
+:root {
+  /* --- Typsnitt ------------------------------------------------------------
+     OBS: variabelnamnen från next/font (--font-display-src / --font-body-src)
+     får ALDRIG återanvändas som namn här. En CSS-variabel som refererar sig
+     själv blir ogiltig och faller tillbaka på webbläsarens standardserif.
+     Den buggen låg live tidigare — hela sajten renderades i Times. */
+  --font-display: var(--font-display-src), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body-src), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Yta och struktur ---------------------------------------------------- */
+  --surface-0: #0b182a; /* sidbakgrund */
+  --surface-1: #101f33; /* kort, paneler */
+  --surface-2: #16273d; /* upphöjda element, hover */
+  --surface-3: #1d3149; /* chips, aktiva ytor */
+  --surface-invert: #ffffff; /* produktbildsytor */
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-brand: rgba(230, 35, 45, 0.45);
+
+  /* --- Text ----------------------------------------------------------------
+     Alla textfärger är kontrollerade mot AA (4.5:1) på --surface-0/-1. */
+  --text: #f3f6f9;
+  --text-muted: #a9b6c6; /* 8.1:1 — brödtext */
+  --text-subtle: #8494a6; /* 5.5:1 — metadata, minst 13px */
+
+  /* --- Varumärke -----------------------------------------------------------
+     --brand används som fyllnad (vit text på röd = 4.5:1).
+     --brand-text är en ljusare nyans för röd TEXT på mörk bakgrund, eftersom
+     --brand på --surface-0 bara ger 3.6:1 och underkänns för liten text. */
+  --brand: #e6232d;
+  --brand-hover: #f5333d;
+  --brand-active: #c31820;
+  --brand-text: #ff5a61; /* 5.0:1 på --surface-0 */
+  --brand-wash: rgba(230, 35, 45, 0.1);
+
+  --focus: #7cc4ff;
+
+  /* --- Avstånd (4px-baserad skala) ----------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5rem;
+  --space-11: 6.5rem;
+  --space-12: 8rem;
+
+  /* Vertikal sektionsrytm — skalar mjukt mellan mobil och desktop. */
+  --section-y: clamp(3.5rem, 2rem + 6vw, 7rem);
+  --section-y-lg: clamp(4.5rem, 2.5rem + 8vw, 9rem);
+
+  /* --- Typskala (flytande, medvetet återhållsam) ---------------------------
+     Ingen "hero-rubrik som fyller skärmen" — premiumkänsla kommer av
+     hierarki och luft, inte av storlek. */
+  --text-display: clamp(2.125rem, 1.5rem + 2.6vw, 3.375rem); /* 34 → 54px */
+  --text-h2: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem); /* 26 → 36px */
+  --text-h3: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem); /* 19 → 22px */
+  --text-h4: 1.0625rem;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-base: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.8125rem;
+  --text-micro: 0.75rem;
+
+  --leading-tight: 1.12;
+  --leading-snug: 1.3;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.7;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+
+  /* --- Radier -------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* --- Skuggor (sparsamt — kanter gör jobbet på mörk bakgrund) ------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 24px 60px -24px rgba(0, 0, 0, 0.85);
+
+  /* --- Rörelse ------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 420ms;
+
+  /* --- Layout -------------------------------------------------------------- */
+  --container: 1200px;
+  --container-wide: 1360px;
+  --container-narrow: 760px;
+  --gutter: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  --header-h: 68px;
+}

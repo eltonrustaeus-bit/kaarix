@@ -1,20 +1,19 @@
 # AGENTS.md — kontext för AI-assistenter som jobbar i det här repot
 
-Det här är en teknisk kontextfil för AI-kodassistenter (Claude, Cursor, Copilot, Codex, etc.)
-som jobbar vidare på Kaarix-sajten i en framtida session. Läs den här filen FÖRST innan du
-gör ändringar — den beskriver arkitektur, medvetna designval och en riktig bugg som redan
-är fixad en gång (så den inte råkar återinförs).
+Teknisk kontextfil för AI-kodassistenter (Claude, Cursor, Copilot, Codex m.fl.) som jobbar
+vidare på Kaarix-sajten i en framtida session. **Läs den här filen först.** Den beskriver
+arkitektur, medvetna designval och flera riktiga buggar som redan är fixade — så att de
+inte råkar återinföras.
 
-Affärskontext, öppna frågor till kunden och projektlogg (kronologisk) ligger i
-`~/Desktop/Sajto x KSB Teknik/KAARIX_BRAND.md` på Elton-datorn — läs den också om du har
-tillgång till den mappen, den förklarar VARFÖR projektet ser ut som det gör affärsmässigt.
+Affärskontext, öppna frågor till kunden och kronologisk projektlogg ligger i
+`~/Desktop/Sajto x KSB Teknik/KAARIX_BRAND.md` på Eltons dator.
 
 ## Vad det här är
 
 Marknadsföringssajt (Next.js 14, App Router, TypeScript) för Kaarix — KSB Tekniks eget
-varumärke för LED-industribelysning. Sajten visar produkter snyggt men hanterar ingen egen
-checkout: "Beställ"-knappar länkar till produktens riktiga sida på ksbteknik.se (Starweb),
-där själva köpet sker. Se README.md för produkt-/affärsdetaljer.
+varumärke för LED-industribelysning. Sajten visar produkter men hanterar ingen egen
+checkout: "Beställ" länkar till produktens riktiga sida på ksbteknik.se (Starweb), där
+köpet sker. Se README.md för affärsdetaljer.
 
 Live: https://kaarix.vercel.app · Repo: github.com/eltonrustaeus-bit/kaarix (branch `main`)
 
@@ -22,101 +21,131 @@ Live: https://kaarix.vercel.app · Repo: github.com/eltonrustaeus-bit/kaarix (br
 
 ```bash
 npm install
-npm run dev      # lokal utveckling, http://localhost:3000
-npm run build    # produktionsbygge — kör alltid detta innan du säger att något är klart
-npm run start    # kör produktionsbygget lokalt (för verklig testning, inte dev-servern)
+npm run dev      # utveckling
+npm run build    # kör ALLTID detta innan något sägs vara klart
+npm run start    # produktionsbygget lokalt — testa mot detta, inte dev-servern
 ```
 
-Kör ALLTID `npm run build` efter ändringar och kontrollera att den går igenom rent innan
-du levererar något. Testa gärna med Playwright mot `npm run start` (produktionsbygget) —
-`npm run dev` döljer vissa produktionsspecifika buggar (t.ex. bildoptimeringsbeteende).
+## Arkitektur
 
-## Arkitektur & filstruktur
+Sajten är flersidig med delad layout. Lägg inte tillbaka allt på en sida.
 
-- `app/layout.tsx` — root layout, laddar självhostade typsnitt via `next/font/local`.
-- `app/page.tsx` — hela sidans sektionsordning (Hero → strip → Featured → Sortiment → Om oss → Kontakt → Footer).
-- `app/globals.css` — all styling, en enda fil, ingen CSS-modul/Tailwind. Använder CSS custom
-  properties för färger (`--navy`, `--red`, etc.) och `clamp()` för flytande typografi.
-- `components/` — en komponent per sektion/UI-bit, alla klientkomponenter (`"use client"`)
-  som animerar med framer-motion.
-- `lib/products.ts` — produktdata (namn, spec, bild, varianter, order-URL:er till ksbteknik.se).
-  **Ingen automatisk synk mot Starweb** — uppdatera manuellt när KSB ändrar Kaarix-sortimentet.
-- `lib/contact.ts` — kontaktinfo (Jesper Svenler), hämtad från den publika sidan
-  ksbteknik.se/page/om-oss. Källa angiven i filen — hitta inte på nya kontaktuppgifter.
+```
+app/
+  layout.tsx            Root: typsnitt, metadata, Header + Footer, skip-länk
+  template.tsx          Sidövergång (monteras om vid varje navigering)
+  page.tsx              Start
+  produkter/page.tsx    Sortiment med filter
+  produkter/[slug]/     Produktsida (generateStaticParams + generateMetadata)
+  om/, kontakt/         Innehållssidor
+  not-found.tsx         404
+  globals.css           Importerar styles/-lagren
+  styles/
+    tokens.css          ENDA källan för färg, typografi, avstånd, radier, rörelse
+    base.css            Reset, typografi, hjälpklasser, tillgänglighet
+    components.css      Komponentstilar
+components/
+  layout/               Header, Footer
+  ui/                   Button, Eyebrow, Icon, Reveal  ← återanvändbara primitiver
+  product/              ProductCard, ProductCatalog, ProductDetail, BuyPanel
+  sections/             Hero, TrustBar, Spotlight, CtaBand
+lib/
+  products.ts           Produktdata + specifikationer (manuellt synkad mot Starweb)
+  contact.ts            Kontaktuppgifter (källa angiven i filen)
+```
+
+**Konventioner:** styla via tokens i `tokens.css`, inte hårdkodade värden. Använd
+`<Button>` i stället för att skriva `<a className="btn">`. Nya sidor får `metadata` och
+exakt en `<h1>`.
 
 ## Medvetna designval (och varför)
 
-**Typsnitt är självhostade** (`public/fonts/*.woff2`), inte laddade via `next/font/google`.
-Anledning: byggmiljön där det här projektet först skapades hade blockerad utgående trafik
-mot fonts.googleapis.com/fonts.gstatic.com, så `next/font/google` failade vid build. Om du
-byter typsnitt: ladda ner rätt `.woff2`-fil manuellt (Google Fonts CSS2-API, leta upp
-`src: url(...)` för latin-varianten) och lägg i `public/fonts/`, peka `next/font/local` på
-den. Nuvarande typsnitt: **Space Grotesk** (rubriker, `--font-display`, vikt 500–700 — det är
-fontens FAKTISKA maxvikt, sätt aldrig `font-weight: 800` eller högre på den, det finns ingen
-sådan instans) och **IBM Plex Sans** (brödtext, `--font-body`, vikt 400–600).
+**Typsnitt självhostas** (`public/fonts/*.woff2`), inte via `next/font/google` — byggmiljön
+där projektet skapades hade blockerad trafik mot Google Fonts. Space Grotesk = rubriker,
+IBM Plex Sans = brödtext. Space Grotesks faktiska maxvikt är **700** — sätt aldrig
+`font-weight: 800` eller högre på den.
 
-**Produktbilder använder `next/image` med `fill`**, aldrig CSS `background-image` och aldrig
-hårdkodade `width`/`height` som tvingar en viss bildproportion. Anledning: en tidigare version
-använde CSS-bakgrundsbild för hero + fasta pixelmått på produktbilder, vilket dels helt
-kringgick Vercels automatiska bildoptimering (ingen responsiv storlek/WebP), dels gav
-layouthopp eftersom inte alla produktbilder faktiskt har samma bildförhållande. Mönstret att
-följa: en `position: relative` wrapper (`.imgwrap`) med en absolut-positionerad inner-div
-(`.imgwrap-inner`) som har paddingen, och `<Image fill style={{objectFit:"contain"}}>` inuti.
+**Bilder använder `next/image` med `fill`**, aldrig CSS `background-image` och aldrig
+hårdkodade `width`/`height` som tvingar fram fel bildförhållande. Mönster: en
+`position: relative`-wrapper med en absolut inner-div som bär paddingen, och
+`<Image fill style={{objectFit:"contain"}}>` inuti.
 
-**Global bakgrundstextur** (`body` i globals.css): ett subtilt "ritnings"-rutnät i hela
-bakgrunden. Lades till för att undvika platta, tomma mörkblå ytor mellan sektioner —
-ta inte bort det utan att ersätta det med något annat som löser samma problem.
+**Ingen page loader.** En tidigare version blockerade varje sidladdning i 900 ms med en
+overlay. Det försämrar upplevd prestanda och blir värre med routing — den är borttagen med
+flit. Återinför den inte.
 
-## En riktig bugg som är fixad — undvik att återinföra den
+## Buggar som redan är fixade — återinför dem inte
 
-`ProductGrid.tsx` filtrerar produkter per kategori. Ett tidigare mönster styrde ALLA
-produktkorts synlighet via en engångsanimation (`whileInView` med `viewport={{once:true}}`)
-på förälder-elementet, som via nedärvda `variants` propagerades ner till varje `ProductCard`.
-Detta funkade vid första sidladdningen men gick sönder permanent så fort användaren bytte
-kategorifilter: nya `ProductCard`-instanser som monterades EFTER att engångstriggern redan
-avfyrats fick aldrig kommandot att bli synliga och fastnade på `opacity: 0` tills sidan
-laddades om.
+**1. Hela sajten renderades i Times.** `globals.css` definierade
+`--font-display: var(--font-display), "Space Grotesk", sans-serif;` i `:root`. Men `:root`
+ÄR `<html>`, samma element som next/font sätter variabeln på — variabeln refererade sig
+själv, blev ogiltig, och `font-family` föll tillbaka på webbläsarens standardserif. Låg
+live länge utan att upptäckas. **Regel:** next/font äger `--font-display-src` /
+`--font-body-src`; CSS:en bygger den färdiga stacken under ett *annat* namn.
 
-**Fixen (nuvarande kod):** varje `ProductCard` äger sin egen `initial`/`animate`/`exit`
-(inte nedärvda `variants` från en `whileInView`-förälder), och `ProductGrid` wrappar listan i
-`<AnimatePresence mode="popLayout">`. Det yttre rutnätet har fortfarande en engångs-
-`whileInView` för den första scroll-in-reveal-effekten, men det styr bara SIG SJÄLVT (ren
-opacity/y på den egna diven), inte barnens synlighet. Om du lägger till fler listor som
-filtreras/omordnas dynamiskt (t.ex. sortering, sök, paginering): använd samma mönster —
-varje item äger sin egen entry/exit-animation, aldrig en engångstrigger som barn förlitar
-sig på för att bli synliga.
+**2. Produkter försvann permanent vid filterbyte.** Rutnätet styrde korten via en
+engångsanimation (`whileInView` + `once: true`) som ärvdes ner via `variants`. Kort som
+monterades EFTER att triggern gått fick aldrig kommandot att bli synliga och fastnade på
+`opacity: 0` tills sidan laddades om. **Regel:** varje element äger sin egen entry/exit —
+ärv aldrig synlighet från en förälders engångstrigger.
+
+**3. Sidan blev osynlig vid `prefers-reduced-motion`.** Komponenter bytte från `motion.div`
+till vanlig `div` efter hydrering. React återanvände DOM-noden och den inline-satta
+`opacity: 0` låg kvar för alltid — 15 element, inklusive `<h1>`, var osynliga för just de
+användare som bett om mindre rörelse. **Regel:** rendera alltid samma elementtyp; stäng av
+animationen med `initial={false}` i stället för att villkorligt byta komponent.
+
+`Reveal` har dessutom en failsafe: syns elementet i vyn men observern inte har rapporterat
+det, visas innehållet ändå. Ett innehållsblock som tyst blir kvar på `opacity: 0` är det
+värsta felläget en scroll-animation kan ha.
+
+## Data
+
+`lib/products.ts` är **manuellt** synkad mot https://ksbteknik.se/search?m=Kaarix — ingen
+automatisk synk. Beskrivningar och tekniska data är hämtade ordagrant från KSB:s egna
+produktsidor. **Hitta aldrig på specifikationer.**
+
+Att känna till:
+- Produkt-URL:erna hos Starweb är missvisande. AUSTIN ligger på en slug som innehåller
+  "tracklight" eftersom KSB skapade produkten genom att duplicera en tracklight. URL:en är
+  ändå rätt — verifiera mot söksidan innan du "rättar" något.
+- "BOSTON WORK LIGHT" är felaktigt taggad med Tillverkare=Kaarix i Starweb men är inte en
+  Kaarix-produkt. Exkluderad med flit.
+- **Öppen fråga:** KSB:s produktnamn anger "7200LM" för AUSTIN medan deras egen tekniska
+  tabell anger 6400 lm. Vi publicerar tabellvärdet och undviker lumen som säljargument i
+  rubriker tills Jesper bekräftat vilket som stämmer.
 
 ## Git / deploy — VIKTIGT
 
-**Ingen AI-assistent i den här miljön har GitHub-inloggning eller push-access.** Commits kan
-göras lokalt (`git add` + `git commit`), men `git push` måste köras av Elton själv i sitt
-egna terminalfönster. Försök inte hitta workarounds för detta (personal access token,
-`gh auth`, etc.) om inte Elton uttryckligen sätter upp det åt dig i den sessionen.
+**Ingen AI-assistent i den här miljön har GitHub-inloggning eller push-access.** Commits
+kan göras lokalt, men `git push` måste köras av Elton själv i hans egen terminal. Leta inte
+efter workarounds (token, `gh auth`) om han inte uttryckligen sätter upp det.
 
-Vercel är kopplat till GitHub-repot och deployar automatiskt på push till `main`. Det finns
-ingen separat staging-miljö — allt som pushas till `main` går live på kaarix.vercel.app.
+Vercel deployar automatiskt vid push till `main`. Ingen staging — allt som pushas går live.
 
-## Testrutin som använts hittills
+## Testrutin
 
-Inget automatiskt testverktyg (Jest/Playwright-testsvit) är uppsatt i repot. Verifiering har
-gjorts manuellt per ändring:
+Ingen testsvit i repot. Verifiering görs med engångsskript per ändring:
+
 1. `npm run build` — måste gå igenom rent.
-2. Starta produktionsbygget (`npm run start`) och kör ett engångs-Playwright-skript (skrivs
-   i farten, sparas inte i repot) som: kollar konsolfel/nätverksfel, klickar igenom
-   kategorifilter och variant-väljare, och tar skärmdumpar vid flera skärmbredder
-   (320px–2560px) för att leta efter horisontell overflow.
-3. **Playwright-fälla att känna till:** `page.screenshot({fullPage:true})` ändrar bara
-   viewportens storlek, den scrollar inte fysiskt genom sidan — så `whileInView`-animationer
-   (IntersectionObserver-baserade) hinner aldrig trigga och sektioner kan se tomma ut i en
-   sådan skärmdump trots att de fungerar helt normalt för en riktig användare som scrollar.
-   Scrolla inkrementellt (`window.scrollTo` i en loop) INNAN du tar skärmdumpen.
-4. En bakgrundad/dold webbläsarflik pausar också CSS/JS-animationer (requestAnimationFrame
-   körs inte när `document.visibilityState === "hidden"`) — om något ser "fruset" ut mitt i
-   en animation vid test i en sådan flik är det ett testartefakt, inte en riktig bugg.
+2. Kör produktionsbygget och testa med Playwright: konsolfel, HTTP-fel, alla routes, alla
+   navigationslänkar, filter- och variantväljare, overflow på 320–2560px, `prefers-reduced-motion`.
+3. Kontrollera att inga element ligger kvar på `opacity: 0` efter scroll — det fångar
+   regressioner av bugg 2 och 3 ovan.
 
-## Öppna punkter (väntar på svar från Jesper/KSB)
+**Fallgropar i testningen som kostat tid:**
+- `page.screenshot({fullPage:true})` ändrar bara viewporthöjden, den scrollar inte fysiskt
+  — scroll-baserade animationer hinner aldrig trigga och sektioner ser tomma ut. Scrolla
+  inkrementellt först.
+- Använd `behavior: "instant"` vid programmatisk scroll. Mjuk scroll hinner inte fram
+  mellan stegen och halva sidan ser oanimerad ut.
+- En bakgrundad/dold flik pausar `requestAnimationFrame`. Ser något "fruset" ut mitt i en
+  animation i en sådan flik är det ett testartefakt, inte en bugg.
+- `waitForLoadState("networkidle")` returnerar direkt vid klientnavigering. Använd
+  `waitForURL` när du verifierar routing.
 
-Se README.md och KAARIX_BRAND.md för fullständig lista. Kortversion: riktiga
-installationsbilder av Kaarix-produkter i verklig miljö, eventuella riktiga
-KSB-siffror/statistik att använda som trust-signaler, samt om Kaarix-kunder ska ha samma
-B2B-inloggningskrav som gäller på ksbteknik.se idag.
+## Öppna punkter (väntar på Jesper/KSB)
+
+Riktiga installationsbilder av produkterna i verklig miljö, eventuella KSB-siffror att
+använda som trust-signaler, lumen-frågan för AUSTIN ovan, samt om Kaarix-kunder ska ha
+samma B2B-inloggningskrav som ksbteknik.se har idag.

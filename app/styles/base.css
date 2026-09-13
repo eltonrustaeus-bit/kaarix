@@ -1,0 +1,230 @@
+/* ==========================================================================
+   Bas: reset, typografi, hjälpklasser, tillgänglighet
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Ankarlänkar ska inte hamna under den klistrade headern. */
+  scroll-padding-top: calc(var(--header-h) + var(--space-5));
+}
+
+/* Mjuk scroll bara för ankarnavigering — inte globalt på html.
+   Globalt kapar den även programmatiska hopp (tillbakanavigering,
+   skip-länken, testverktyg) och får sidan att kännas trög. */
+@media (prefers-reduced-motion: no-preference) {
+  :target {
+    scroll-behavior: smooth;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--surface-0);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  margin: 0;
+  /* Undviker enstaka ord som hänger kvar på sista raden. */
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- Fokus ----------------------------------------------------------------
+   Synlig fokusring för tangentbord, men inte vid musklick. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --- Hoppa till innehåll -------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: 200;
+  transform: translateY(-200%);
+  padding: var(--space-3) var(--space-5);
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* --- Endast för skärmläsare ----------------------------------------------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Layoutprimitiver ------------------------------------------------------ */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container-wide {
+  max-width: var(--container-wide);
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section-lg {
+  padding-block: var(--section-y-lg);
+}
+
+.section-divider {
+  border-top: 1px solid var(--border);
+}
+
+/* --- Textstilar ------------------------------------------------------------ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--brand-text);
+  font-family: var(--font-body);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 20px;
+  height: 1px;
+  background: currentColor;
+  flex: none;
+  opacity: 0.7;
+}
+
+.lead {
+  font-size: var(--text-lead);
+  line-height: var(--leading-normal);
+  color: var(--text-muted);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.subtle {
+  color: var(--text-subtle);
+}
+
+/* --- Sektionshuvud --------------------------------------------------------- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 62ch;
+}
+
+.section-head.center {
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.section-head h1,
+.section-head h2 {
+  font-size: var(--text-h2);
+}
+
+/* --- Rörelsekänslighet -----------------------------------------------------
+   Respekterar systeminställningen "minska rörelse". Animationer stängs av
+   helt istället för att bara kortas ner. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
