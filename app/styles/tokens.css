@@ -63,7 +63,7 @@
   /* --- Typskala (flytande, medvetet återhållsam) ---------------------------
      Ingen "hero-rubrik som fyller skärmen" — premiumkänsla kommer av
      hierarki och luft, inte av storlek. */
-  --text-display: clamp(2.125rem, 1.5rem + 2.6vw, 3.375rem); /* 34 → 54px */
+  --text-display: clamp(2.125rem, 1.35rem + 3.1vw, 3.875rem); /* 34 → 62px */
   --text-h2: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem); /* 26 → 36px */
   --text-h3: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem); /* 19 → 22px */
   --text-h4: 1.0625rem;
@@ -101,9 +101,14 @@
   --duration-base: 220ms;
   --duration-slow: 420ms;
 
-  /* --- Layout -------------------------------------------------------------- */
-  --container: 1200px;
-  --container-wide: 1360px;
+  /* --- Layout --------------------------------------------------------------
+     Containern växer med skärmen i stället för att stanna på en fast bredd:
+     1200px upp till ~1430px viewport, sedan mjukt upp till 1440px. På en
+     1920-skärm blir marginalerna annars så breda att sidan ser ut att ligga
+     i en smal spalt. Läsbarheten skyddas separat — textblock begränsas av
+     ch-mått, inte av containern. */
+  --container: clamp(1200px, 84vw, 1440px);
+  --container-wide: clamp(1200px, 92vw, 1680px);
   --container-narrow: 760px;
   --gutter: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
   --header-h: 68px;

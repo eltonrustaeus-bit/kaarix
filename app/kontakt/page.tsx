@@ -37,7 +37,7 @@ export default function ContactPage() {
             <p className="field-label" style={{ marginTop: "var(--space-8)" }}>
               Vi hjälper till med
             </p>
-            <ul className="spec-list" style={{ margin: 0, gridTemplateColumns: "1fr" }}>
+            <ul className="spec-list spec-list-single">
               {helpWith.map((h) => (
                 <li key={h}>{h}</li>
               ))}

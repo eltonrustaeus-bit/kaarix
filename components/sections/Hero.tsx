@@ -86,6 +86,29 @@ export default function Hero() {
             </div>
           ))}
         </motion.dl>
+
+        {/* Dekorativ — produkten presenteras med namn längre ner på sidan.
+            Visas bara från 1120px och uppåt, se .hero-product i CSS. */}
+        <motion.div
+          className="hero-product"
+          aria-hidden="true"
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
+          }
+        >
+          <Image
+            src="/images/austin-cutout.png"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 1119px) 10px, 44vw"
+            style={{ objectFit: "contain" }}
+          />
+        </motion.div>
       </div>
     </section>
   );
