@@ -58,9 +58,12 @@ export default function AboutPage() {
                 overflow: "hidden",
               }}
             >
+              {/* KSB Tekniks egen bild från ksbteknik.se — Jesper Svenler och
+                  Marcus Bergkvist i företagets lokaler. Ersätter en generisk
+                  stockbild som kunde läsas som att den föreställde KSB. */}
               <Image
-                src="/images/hero-warehouse.jpg"
-                alt="Industrilokal belyst med LED-armaturer i taket"
+                src="/images/ksb-team.jpg"
+                alt="Jesper Svenler och Marcus Bergkvist i KSB Tekniks lokaler"
                 fill
                 sizes="(max-width: 860px) 92vw, 46vw"
                 style={{ objectFit: "cover" }}

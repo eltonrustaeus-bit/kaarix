@@ -3,6 +3,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import { ArrowRight, Mail, Phone } from "@/components/ui/Icon";
+import Image from "next/image";
 import { contact } from "@/lib/contact";
 import { storeUrl } from "@/lib/products";
 
@@ -47,9 +48,19 @@ export default function ContactPage() {
           <Reveal delay={0.08}>
             <div>
               <div className="contact-card">
-                <div>
-                  <p className="contact-name">{contact.name}</p>
-                  <p className="contact-role">{contact.role}</p>
+                <div className="contact-person">
+                  <Image
+                    className="contact-photo"
+                    src={contact.photo}
+                    alt=""
+                    width={120}
+                    height={120}
+                    sizes="60px"
+                  />
+                  <div>
+                    <p className="contact-name">{contact.name}</p>
+                    <p className="contact-role">{contact.role}</p>
+                  </div>
                 </div>
                 <div className="contact-rows">
                   <a className="contact-row" href={contact.phoneHref}>

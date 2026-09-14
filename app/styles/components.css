@@ -1083,6 +1083,22 @@
   border-radius: var(--radius-lg);
 }
 
+/* Porträttet är dekorativt — namnet står i texten bredvid, så alt är tomt. */
+.contact-person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.contact-photo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+  border: 1px solid var(--border-strong);
+}
+
 .contact-name {
   font-family: var(--font-display);
   font-size: var(--text-h3);
